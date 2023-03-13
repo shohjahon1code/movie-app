@@ -1,0 +1,21 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* base */
+@layer components {
+  body {
+    @apply bg-[#1D1D1D] text-white;
+  }
+
+  header {
+    @apply flex items-center justify-between fixed top-0 w-full z-50 px-4 py-4 transition-all lg:px-10 lg:py-5;
+  }
+}
+
+/* Custom className */
+@layer components {
+  .navlink {
+    @apply cursor-pointer text-sm font-light transition-all text-[#fff] rounded-full hover:bg-stone-500;
+  }
+}
