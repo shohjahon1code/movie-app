@@ -22,7 +22,7 @@ const Header = () => {
   }, []);
 
   return (
-    <header className={`${scrolled && 'bg-red-500 shadow-lg'}`}>
+    <header className={`${scrolled && "bg-red-500 shadow-lg"}`}>
       <div className="flex items-center space-x-2 md:space-x-10">
         <Image
           src={"/logo.svg"}
@@ -31,7 +31,6 @@ const Header = () => {
           height={56}
           className="cursor-pointer object-contain"
         />
-
         <ul className=" md:flex space-x-10 hidden">
           <li className="navlink">
             <Image src={"/home.svg"} alt="home" width={32} height={32} />
