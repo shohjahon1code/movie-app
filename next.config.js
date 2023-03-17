@@ -2,8 +2,8 @@
 const nextConfig = {
   reactStrictMode: true,
   images: {
-    domains: ['image.tmdb.org'],
+    domains: ["image.tmdb.org", "i.ibb.co"],
   },
-}
+};
 
-module.exports = nextConfig
+module.exports = nextConfig;

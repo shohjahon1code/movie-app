@@ -16,3 +16,7 @@ export interface IMovie {
   origin_country: string[];
   title: string;
 }
+
+export interface Element {
+  type: "Trailer" | "Clip" | "Opening Credits";
+}
