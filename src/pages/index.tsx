@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { Header, Hero, Modal, Row } from "@/components";
+import { Header, Hero, Modal, Row, Subscription } from "@/components";
 import { IMovie } from "@/interfaces/app.interface";
 import { API_REQUEST } from "@/service/api.service";
 import { GetServerSideProps } from "next";
@@ -20,8 +20,10 @@ export default function Home({
 }: HomeProps): JSX.Element {
   const { isLoading } = useContext(AuthContext);
   const { modal, setModal } = useInfoStore();
+  let subscription = false;
 
   if (isLoading) return <>{null}</>;
+  if(!subscription) return <Subscription />
 
   return (
     <div className="relative min-h-screen">
