@@ -1,25 +1,22 @@
 import { TextField } from "@/components";
 import { AuthContext } from "@/context/auth.context";
 import { Form, Formik } from "formik";
+import { GetServerSideProps } from "next";
 import Head from "next/head";
 import Image from "next/image";
-import { useRouter } from "next/router";
 import { useContext, useState } from "react";
 import * as Yup from "yup";
 
 const Auth = () => {
   const [auth, setAuth] = useState<"signup" | "signin">("signin");
   const { error, isLoading, signIn, signUp, user } = useContext(AuthContext);
-  const router = useRouter();
 
-  if (user) router.push("/");
-  
 
   const toggleAuth = (state: "signup" | "signin") => {
     setAuth(state);
   };
 
-  const onSubmit = (formDate: { email: string; password: string }) => {
+  const onSubmit = async (formDate: { email: string; password: string }) => {
     if (auth === "signin") {
       signIn(formDate.email, formDate.password);
     } else {
@@ -89,8 +86,8 @@ const Auth = () => {
               {isLoading
                 ? "Loading..."
                 : auth === "signin"
-                ? "Sign In"
-                : "Sign Up"}
+                  ? "Sign In"
+                  : "Sign Up"}
             </button>
           </Form>
         </Formik>
@@ -123,3 +120,18 @@ const Auth = () => {
 };
 
 export default Auth;
+
+
+export const getServerSideProps: GetServerSideProps = async({ req }) => {
+  const user_id = req.cookies.user_id;
+
+  if (user_id) {
+    return {
+      redirect: { destination: '/', permanent: false }
+    }
+  }
+
+  return {
+    props: {}
+  }
+}
