@@ -30,8 +30,8 @@ export default async function handler(
           },
         ],
         customer: customer?.id,
-        success_url: `${public_domain}success`,
-        cancel_url: `${public_domain}cancel`,
+        success_url: `${public_domain}/success`,
+        cancel_url: `${public_domain}/cancel`,
       });
 
       return res.status(200).json({ subscription});
