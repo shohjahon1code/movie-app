@@ -37,14 +37,14 @@ export default async function handler(
       return res.status(200).json({ subscription});
     } catch (error) {
       const result = error as Error;
-      // return res.status(400).json({ message: result.message });
+      return res.status(400).json({ message: result.message });
     }
   } else {
-    // return res.status(400).json({ message: "Method not alllowed" });
+    return res.status(400).json({ message: "Method not alllowed" });
   }
 }
 
 interface Data  {
   message?: string;
-  subscription: Stripe.Response<Stripe.Checkout.Session>;
+  subscription?: Stripe.Response<Stripe.Checkout.Session>;
 };

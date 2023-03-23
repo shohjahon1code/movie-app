@@ -5,6 +5,7 @@ import { VscAccount } from "react-icons/vsc";
 import { TbBellMinusFilled } from "react-icons/tb";
 import Link from "next/link";
 import { AuthContext } from "@/context/auth.context";
+import NavMenu from "../nav-menu/nav-menu";
 
 const Header = () => {
   const [scrolled, setScrolled] = useState(false);
@@ -33,6 +34,7 @@ const Header = () => {
           height={56}
           className="cursor-pointer object-contain"
         />
+        <NavMenu />
         <ul className=" md:flex space-x-10 hidden">
           <li className="navlink">
             <Image src={"/home.svg"} alt="home" width={32} height={32} />

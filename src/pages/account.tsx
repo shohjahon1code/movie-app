@@ -5,8 +5,14 @@ import React from 'react'
 import { VscAccount } from 'react-icons/vsc'
 import { MdOutlineSubscriptions } from 'react-icons/md'
 import { MemebershipPlan } from '@/components'
+import { API_REQUEST } from '@/service/api.service'
+import { GetServerSideProps } from 'next'
+import { Subscription } from '@/interfaces/app.interface'
+import moment from 'moment'
 
-const Account = () => {
+const Account = ({ subscription }: AccountProps) => {
+
+  console.log(subscription)
   return (
     <>
       <Head>
@@ -42,19 +48,19 @@ const Account = () => {
           <h2 className='text-3xl md:text-4xl '>Account</h2>
           <div className='-ml-1 flex gap-x-1.5 items-center '>
             <MdOutlineSubscriptions className='w-5 h-5 text-red-500' />
-            <p className='text-md font-semibold text-[#555] '>Member since 20 February 2023</p>
+            <p className='text-md font-semibold text-[#555] '>Member since {moment(subscription.current_period_start * 1000).format('DD MMM YYYY')}</p>
           </div>
         </div>
 
-        <MemebershipPlan />
+        <MemebershipPlan subscription={subscription} />
         <div className='accountpage'>
           <h4 className='text-lg text-[gray]'>Plan Details</h4>
-          <div className='col-span-2 font-medium'>Premium</div>
+          <div className='col-span-2 font-medium'>{subscription.plan.nickname.toUpperCase()}</div>
           <p className='cursor-pointer text-blue-500 hover:underline md:text-right'>Change plan</p>
         </div>
         <div className='accountpage'>
-        <h4 className='text-lg text-[gray]'>Settings</h4>
-        <p className='col-span-3 cursor-pointer text-blue-500 hover:underline'>Sign out all devices</p>
+          <h4 className='text-lg text-[gray]'>Settings</h4>
+          <p className='col-span-3 cursor-pointer text-blue-500 hover:underline'>Sign out all devices</p>
         </div>
       </main>
     </>
@@ -62,3 +68,34 @@ const Account = () => {
 }
 
 export default Account
+
+
+export const getServerSideProps: GetServerSideProps<AccountProps> = async ({ req }) => {
+  const user_id = req.cookies.user_id;
+  if (!user_id) {
+    return {
+      redirect: { destination: '/auth', permanent: false }
+    }
+  }
+
+  const subscription = await fetch(`${API_REQUEST.subscription}/${user_id}`).then((res) => res.json())
+
+
+  if (!subscription.subscription.data.length) {
+    return {
+      redirect: {
+        destination: '/', permanent: false
+      }
+    }
+  }
+
+  return {
+    props: {
+      subscription: subscription.subscription.data[0]
+    }
+  }
+}
+
+interface AccountProps {
+  subscription: Subscription
+}

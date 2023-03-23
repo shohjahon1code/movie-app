@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import MuImodal from "@mui/material/Modal";
 import { useInfoStore } from "@/store";
 import { FaTimes, FaPlay } from "react-icons/fa";
@@ -7,6 +7,12 @@ import { BsVolumeMute, BsVolumeDown } from "react-icons/bs";
 import { AiOutlinePauseCircle, AiFillLike } from "react-icons/ai";
 import { Element } from "@/interfaces/app.interface";
 import ReactPlayer from "react-player";
+import { addDoc, collection } from "firebase/firestore";
+import { db } from "@/firebase";
+import { AuthContext } from "@/context/auth.context";
+import { useRouter } from "next/router";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Modal = () => {
   const { setModal, modal, currentMovie } = useInfoStore();
@@ -15,10 +21,14 @@ const Modal = () => {
   const [trailer, setTrailer] = useState<string>("");
   const [muted, setMuted] = useState<boolean>(true);
   const [playing, setPlaying] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(false);
+  const { user } = useContext(AuthContext)
+  const router = useRouter()
 
-  const api = `${base_url}${
-    currentMovie.media_type === "tv" ? "tv" : "movie"
-  }/${currentMovie.id}/videos?api_key=${api_key}&language=en-US`;
+  const notify = () => toast.success("Film added to MY LIST");
+
+  const api = `${base_url}${currentMovie.media_type === "tv" ? "tv" : "movie"
+    }/${currentMovie.id}/videos?api_key=${api_key}&language=en-US`;
 
   const handleClose = () => {
     setModal(false);
@@ -45,6 +55,23 @@ const Modal = () => {
 
     //eslint-disable-next-line
   }, [currentMovie]);
+
+
+  const addProductList = async () => {
+    try {
+      setLoading(true)
+      const docRef = await addDoc(collection(db, 'list'), {
+        userId: user?.uid,
+        product: currentMovie
+      })
+      notify()
+      setLoading(false)
+      router.replace(router.asPath)
+    } catch (error) {
+      console.log('Error addding document')
+      setLoading(false)
+    }
+  }
 
   return (
     <MuImodal
@@ -83,8 +110,9 @@ const Modal = () => {
 
                 {playing ? "Pause" : "Play"}
               </button>
-              <button className="modalButton">
-                <BiPlus />
+              <button className="modalButton" onClick={addProductList}>
+                {loading ? '...' : <BiPlus />}
+                <ToastContainer />
               </button>
               <button className="modalButton">
                 <AiFillLike />
