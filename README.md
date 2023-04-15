@@ -3,7 +3,7 @@
 # Demo
 https://shoh-movie-app.vercel.app/
 
-# Stack
+#Stack
 -Nextjs
 -Reactjs
 -Typescript
